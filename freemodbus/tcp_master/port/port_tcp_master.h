@@ -132,6 +132,16 @@ BOOL xMBTCPPortMasterWaitEvent(EventGroupHandle_t xEventHandle, EventBits_t xEve
  */
 void vMBTCPPortMasterSetNetOpt(void* pvNetIf, eMBPortIpVer xIpVersion, eMBPortProto xProto);
 
+/**
+ * Set network options for Master port
+ *
+ * @param usIndex index of the address info
+ * @param ucSlaveAddress slave unit ID (UID) field for MBAP frame
+ *
+ * @return TRUE
+ */
+BOOL xMBTCPPortMasterSetSlaveAddress(const USHORT usIndex, UCHAR ucSlaveAddress);
+
 #ifdef __cplusplus
 PR_END_EXTERN_C
 #endif

@@ -1036,4 +1036,13 @@ xMBMasterTCPTimerExpired(void)
     return xNeedPoll;
 }
 
+#if MB_TCP_UID_ENABLED
+BOOL xMBTCPPortMasterSetSlaveAddress(const USHORT usIndex, UCHAR ucSlaveAddress)
+{
+    MbSlaveInfo_t* pxInfo = xMbPortConfig.pxMbSlaveInfo[usIndex];
+    pxInfo->ucSlaveAddr = ucSlaveAddress;
+    return TRUE;
+}
+#endif
+
 #endif //#if MB_MASTER_TCP_ENABLED

@@ -259,6 +259,16 @@ esp_err_t mbc_master_get_parameter(uint16_t cid, char* name, uint8_t* value, uin
 */
 esp_err_t mbc_master_set_parameter(uint16_t cid, char* name, uint8_t* value, uint8_t *type);
 
+
+/**
+ * @brief Set slave address
+ * 
+ * @param slave_addr 
+ * @return
+ *     - ESP_OK   Success
+ */
+esp_err_t mbc_tcp_master_set_slave_address(uint8_t slave_addr);
+
 #ifdef __cplusplus
 }
 #endif

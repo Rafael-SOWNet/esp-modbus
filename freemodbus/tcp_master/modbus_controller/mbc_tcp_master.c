@@ -816,4 +816,24 @@ esp_err_t mbc_tcp_master_create(void** handler)
     return ESP_OK;
 }
 
+#if MB_TCP_UID_ENABLED
+esp_err_t mbc_tcp_master_set_slave_address(uint8_t slave_addr)
+{
+    MB_MASTER_ASSERT(mbm_interface_ptr != NULL);
+    mb_slave_addr_entry_t* it;
+    mb_master_options_t* mbm_opts = &mbm_interface_ptr->opts;
+
+    if (LIST_EMPTY(&mbm_opts->mbm_slave_list)) {
+        return ESP_FAIL;
+    }
+    LIST_FOREACH(it, &mbm_opts->mbm_slave_list, entries) {
+        it->slave_addr = slave_addr;
+    }
+
+    xMBTCPPortMasterSetSlaveAddress(0, slave_addr);
+
+    return ESP_OK;
+}
+#endif
+
 #endif //#if MB_MASTER_TCP_ENABLED
