@@ -30,7 +30,13 @@ typedef enum {
     PARAM_TYPE_U16 = 0x01,                  /*!< Unsigned 16 */
     PARAM_TYPE_U32 = 0x02,                  /*!< Unsigned 32 */
     PARAM_TYPE_FLOAT = 0x03,                /*!< Float type */
-    PARAM_TYPE_ASCII = 0x04                 /*!< ASCII type */
+    PARAM_TYPE_ASCII = 0x04,                /*!< ASCII type */
+    PARAM_TYPE_U64 = 0x08,
+    PARAM_TYPE_U8_BE = 0x80,
+    PARAM_TYPE_U16_BE = 0x81,
+    PARAM_TYPE_U32_BE = 0x82,
+    PARAM_TYPE_FLOAT_BE = 0x83,
+    PARAM_TYPE_U64_BE = 0x88,
 } mb_descr_type_t;
 
 /*!
@@ -43,7 +49,8 @@ typedef enum {
     PARAM_SIZE_FLOAT = 0x04,                /*!< Float size */
     PARAM_SIZE_ASCII = 0x08,                /*!< ASCII size */
     PARAM_SIZE_ASCII24 = 0x18,              /*!< ASCII24 size */
-    PARAM_MAX_SIZE
+    PARAM_SIZE_U64 = 0x08,
+    // PARAM_MAX_SIZE,
 } mb_descr_size_t;
 
 /*!

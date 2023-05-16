@@ -402,6 +402,11 @@ static uint8_t mbc_tcp_master_get_command(mb_param_type_t param_type, mb_param_m
     return command;
 }
 
+#define __beswap_32(x) \
+    (__extension__							      \
+     ({ uint32_t __bsx = (x);					      \
+        ((((__bsx) >> 16) & 0xffff) | (((__bsx) & 0xffff) << 16)); }))
+
 // Helper function to set parameter buffer according to its type
 static esp_err_t mbc_tcp_master_set_param_data(void* dest, void* src, mb_descr_type_t param_type, size_t param_size)
 {
@@ -409,20 +414,41 @@ static esp_err_t mbc_tcp_master_set_param_data(void* dest, void* src, mb_descr_t
     MB_MASTER_CHECK((dest != NULL), ESP_ERR_INVALID_ARG, "incorrect parameter pointer.");
     MB_MASTER_CHECK((src != NULL), ESP_ERR_INVALID_ARG, "incorrect parameter pointer.");
     // Transfer parameter data into value of characteristic
+    // NOTE: 16-bit registers are already swapped with eMBMasterReq... functions.
     switch(param_type)
     {
         case PARAM_TYPE_U8:
+        case PARAM_TYPE_U8_BE:
             *((uint8_t*)dest) = *((uint8_t*)src);
             break;
         case PARAM_TYPE_U16:
+        case PARAM_TYPE_U16_BE:
             *((uint16_t*)dest) = *((uint16_t*)src);
             break;
         case PARAM_TYPE_U32:
             *((uint32_t*)dest) = *((uint32_t*)src);
             break;
+        case PARAM_TYPE_U32_BE: {
+            uint32_t v = *((uint32_t*)src);
+            *((uint32_t*)dest) = __beswap_32(v);
+            break;
+        }
+        case PARAM_TYPE_U64:
+            *(((uint32_t*)dest) + 0) = *(((uint32_t*)src) + 0);
+            *(((uint32_t*)dest) + 1) = *(((uint32_t*)src) + 1);
+            break;
+        case PARAM_TYPE_U64_BE:
+            *(((uint32_t*)dest) + 0) = __beswap_32(*(((uint32_t*)src) + 1));
+            *(((uint32_t*)dest) + 1) = __beswap_32(*(((uint32_t*)src) + 0));
+            break;
         case PARAM_TYPE_FLOAT:
             *((float*)dest) = *(float*)src;
             break;
+        case PARAM_TYPE_FLOAT_BE: {
+            uint32_t v = *((uint32_t*)src);
+            *((uint32_t*)dest) = __beswap_32(v);
+            break;
+        }
         case PARAM_TYPE_ASCII:
             memcpy((void*)dest, (void*)src, (size_t)param_size);
             break;
